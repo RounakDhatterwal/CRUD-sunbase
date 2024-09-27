@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.sunbase.crud.entity.Customer;
 import com.sunbase.crud.services.CustomerService;
 
 @RestController
+@CrossOrigin(origins = "http://127.0.0.1:5500/") 
 public class CustomerController {
 	
 	@Autowired
@@ -41,9 +43,6 @@ public class CustomerController {
 //		System.out.println(customer.toString());
 //		
 //		 Customer saveAll = this.customerService.saveAll(customer);
-//		
-//		return saveAll;
-		
 		try {
 	        System.out.println(customer.toString());
 	        return this.customerService.saveAll(customer);

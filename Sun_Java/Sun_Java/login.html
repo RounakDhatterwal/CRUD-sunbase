@@ -4,22 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; 
+            margin: 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            width: auto;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+    </style>
     <script>
         function redirectToCustomerList(event) {
             event.preventDefault(); 
-            // logic to validate 
+
             window.location.href = "customer-list.html"; 
         }
     </script>
 </head>
+
 <body>
-    <h2>Login</h2>
     <form onsubmit="redirectToCustomerList(event)">
+        <h2>Login</h2>
         <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+        <input type="email" id="email" name="email" required><br>
 
         <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
+        <input type="password" id="password" name="password" required><br>
 
         <input type="submit" value="Login">
     </form>

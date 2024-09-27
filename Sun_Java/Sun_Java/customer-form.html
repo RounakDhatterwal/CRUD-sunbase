@@ -3,22 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Customer</title>
+    <title>Add/Edit Customer</title>
+    <script>
+        async function populateForm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerId = urlParams.get('id'); 
+
+            if (customerId) {
+                console.log('Customer ID found:', customerId); 
+
+                document.getElementById('customer_id').value = customerId;
+
+                try {
+                    const response = await fetch(`http://localhost:8080/get/${customerId}`);
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch customer data');
+                    }
+
+                    const customer = await response.json();
+                    console.log('Fetched customer data:', customer); 
+
+                    document.getElementById('first_name').value = customer.first_name || '';
+                    document.getElementById('last_name').value = customer.last_name || '';
+                    document.getElementById('street').value = customer.street || '';
+                    document.getElementById('address').value = customer.address || '';
+                    document.getElementById('city').value = customer.city || '';
+                    document.getElementById('state').value = customer.state || '';
+                    document.getElementById('email').value = customer.email || '';
+                    document.getElementById('phone').value = customer.phone || '';
+
+                } catch (error) {
+                    console.error('Error fetching customer:', error); 
+                }
+            } else {
+                console.log('No Customer ID found, empty form for adding a new customer');
+            }
+        }
+
+        async function submitForm(event) {
+            event.preventDefault(); 
+
+            const customerId = document.getElementById('customer_id').value;
+            const url = customerId 
+                ? `http://localhost:8080/update/${customerId}` 
+                : 'http://localhost:8080/add';
+
+            const method = customerId ? 'PUT' : 'POST'; 
+
+            const customerData = {
+                first_name: document.getElementById('first_name').value,
+                last_name: document.getElementById('last_name').value,
+                street: document.getElementById('street').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(customerData),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to ${customerId ? 'update' : 'add'} customer`);
+                }
+
+                alert(`Customer ${customerId ? 'updated' : 'added'} successfully`);
+                window.location.href = '/customer-list.html'; 
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('An error occurred while submitting the form');
+            }
+        }
+
+        window.onload = populateForm;
+    </script>
 </head>
 <body>
-    <h2>Create New Customer</h2>
-    <form action="/create-customer" method="POST">
+    <h2>Add/Edit Customer</h2>
+    <form id="customer-form">
+        <input type="hidden" name="id" id="customer_id"> 
+
         <label for="first_name">First Name:</label><br>
-        <input type="text" id="first_name" name="first_name" required><br><br>
+        <input type="text" id="first_name" name="first_name"><br><br>
 
         <label for="last_name">Last Name:</label><br>
-        <input type="text" id="last_name" name="last_name" required><br><br>
-
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="phone">Phone:</label><br>
-        <input type="text" id="phone" name="phone"><br><br>
+        <input type="text" id="last_name" name="last_name"><br><br>
 
         <label for="street">Street:</label><br>
         <input type="text" id="street" name="street"><br><br>
@@ -32,10 +107,15 @@
         <label for="state">State:</label><br>
         <input type="text" id="state" name="state"><br><br>
 
-        <input type="submit" value="Create Customer">
-    </form>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
 
+        <label for="phone">Phone:</label><br>
+        <input type="tel" id="phone" name="phone"><br><br>
+
+        <button type="submit" onclick="submitForm(event)">Submit</button>
+    </form>
     <br>
-    <a href="customer-list.html">Back to Customer List</a>
+    <a href="/customer-list.html">Back to Customer List</a>
 </body>
 </html>
